@@ -46,6 +46,11 @@
             const addressList = document.querySelector('#addressList')
             //console.log(addressInput.value);
             // input에 입력한 내용을 console로 직어두기
+            if(addressInput.value.length==0){
+                alert('주소를 입력해주세요')
+                addressInput.focus()
+                return false
+            }
             let options = {
                 method:'GET',
                 headers:{
@@ -54,8 +59,13 @@
             }           
             let result = await fetch(`https://dapi.kakao.com/v2/local/search/address.json?analyze_type=similar&page=1&size=10&query=${addressInput.value}`,options)
             //console.log(result);
-            let json = await result.json()   
-           json.documents.forEach(v => {
+            let json = await result.json()
+            addressList.innerHTML=''
+            if(json.documents.length==0){
+                addressList.innerHTML='<li>결과값이 존재하지 않습니다.</li>'
+                return false
+            }
+            json.documents.forEach(v => {
               // console.log(v)
                const li = document.createElement('li')
                li.innerHTML = v.address_name
@@ -87,6 +97,13 @@
 
            console.log(json)
            let road_address = json.documents[0].road_address
+           /*
+           if(road_address==null){
+               let address_name = json.documents[0].address.address_name
+               document.querySelector('#address1').value = `${address_name}`
+           }
+           */
+          
            if(road_address!==null){
                 let address_name = json.documents[0].road_address.address_name
                 let building_name = json.documents[0].road_address.building_name
