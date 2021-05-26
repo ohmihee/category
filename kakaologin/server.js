@@ -49,6 +49,11 @@ const kakao = {
     redirectUri : 'http://localhost:3000/auth/kakao/callback'
 }
 
+app.get('/',(req,res)=>{
+    res.render('index3');
+})
+
+
 app.get('/', (req,res) => {
     const {msg} = req.query;
     console.log(req.session.authData)
@@ -57,6 +62,8 @@ app.get('/', (req,res) => {
         logininfo:req.session.authData,
     })
 })
+
+
 
 app.get('/login',(req,res)=>{
     res.render('login');
@@ -98,11 +105,13 @@ app.get('/auth/kakao', (req,res) => {
 
 app.get('/auth/kakao/callback',async (req,res)=>{
     const {session,query} = req;  //req.query를 변수 qurey에 담고
+    //req.session의 값이 변수 session에 복사됨
     const {code} = query;  // req.query.code를 변수 code에 넣은 것
 
     let token;
     try{
         token = await axios({
+            // 내가 kakao에 data를 전송하는 것
             // axios => promise object
             method: 'POST',
             url: 'https://kauth.kakao.com/oauth/token',
@@ -115,8 +124,8 @@ app.get('/auth/kakao/callback',async (req,res)=>{
                 client_secret:kakao.clientSecret,
                 redirectUri:kakao.redirectUri,
                 code   //:req.query.code,
-
             }) 
+            // 위에 내가 보내는 정보를 기반으로 하여 토큰을 받음
         })
     } catch(err){
         res.json(err.data)
@@ -151,6 +160,7 @@ app.get('/auth/kakao/callback',async (req,res)=>{
         // 깊은 복사
         // 이후에 원본의 값이 변하여도 복사시점의 값을 이용
     }
+    /////////////////////////////////////////////////////?????????????????????????????????????
     session.authData = {
         ['kakao']:authData,
     }
@@ -169,11 +179,16 @@ const authMiddleware = (req,res,next)=>{
     }
 }
 
+
+ //fetch(url,options)
+ // 
 app.get('/auth/info',authMiddleware,(req,res)=>{
     console.log('session=======================================',req.session);
     // let {nickname,profile_image} = req.session.kakao.properties
     const {authData} = req.session;
+    ///==================================================================================
     const provider = Object.keys(authData)[0];
+    //object의 0번째 있는 key값을 가져옴
     //console.log(provider,'......................................................................');
     let userinfo = {}
 
@@ -208,7 +223,7 @@ app.get('/auth/kakao/unlink', async(req,res)=>{
             url:'https://kapi.kakao.com/v1/user/unlink', //url은 이것으로
             headers:{
                 Authorization:`Bearer ${access_token}` // 헤더는 해당 내용으로
-            }
+            }   
         })
     } catch(error){
         res.json(error.data);
@@ -230,6 +245,8 @@ app.get('/auth/kakao/unlink', async(req,res)=>{
 
 app.get('/auth/logout',(req,res)=>{
     const {authData} = req.session;
+    //구조분해할당문
+    // authdata라는 변수를 만들고 req.session.authdata의 값을 복사해서 authdata에 저장
     const provider = Object.keys(authData)[0];
     switch(provider){
         case "local":
@@ -247,3 +264,10 @@ app.get('/auth/logout',(req,res)=>{
 app.listen(3000,()=>{
     console.log(`server port 3000`)
 })
+
+
+
+// try    /-catch
+// .then   /-catch
+// async -await     /-catch
+// -catch는 오류를 잡기 위한 것
