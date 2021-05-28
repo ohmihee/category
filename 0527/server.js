@@ -4,19 +4,22 @@ const bodyParser = require('body-parser')
 const app = express()
 const port = process.env.PORT||3009
 const cookieParser = require('cookie-parser')
-const token = require('./createtoken') //외부 js파일 가져오기
+//const token = require('./createtoken') //외부 js파일 가져오기
+const ctoken = require('./jwt')
 
 
 app.set('view engine','html')
 
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended:false}))
 app.use(cookieParser())
 app.use(express.static('public'))
-app.use(bodyParser.urlencoded({extended:false}))
+
 
 nunjucks.configure('views',{express:app})
 
 
-app.get('/',(req,res)=>{
+app.get('/',(req,res)=>{   //main페이지
     //key:value
     let {msg} = req.query;
     //res.send(``)
@@ -54,10 +57,45 @@ app.get('/',(req,res)=>{
 
 
 
-app.get('/menu1',(req,res)=>{
-    console.log(req.cookies)
+app.get('/menu1',(req,res)=>{   //sub페이지
+    //console.log(req.cookies)
     res.cookie('token','menu1')
     res.send('menu1페이지입니다.')
+})
+// POST auth/local/login
+app.post('/auth/local/login',(req,res)=>{
+    let {userid,userpw} = req.body;
+    //let {userid2,userpw2} = JSON.parse(req.get('data'));
+    console.log('body req:=========',userid,userpw)
+    //console.log('data req:========', userid2,userpw2)
+    let result = {};
+    // DB접속 후 결과 return
+    if(userid=='root'&& userpw=='root'){
+        //로그인 성공
+        result = {
+            result:true,
+            msg:'로그인에 성공하셨습니다.'
+        }      
+        // token 내용을 보내줌
+        // 여기에 쓰면 너무 기니까 파일을 따로 만들어서 불러옴
+        let token = ctoken(userid);
+        res.cookie('AccessToken',token,{httpOnly:true,secure:true,})
+        //res.cookie('token',token,{httpOnly:true,secure:true})
+    }else{
+        // 로그인 실패
+        result = {
+            result:false,
+            msg:'아이디와 패스워드를 확인해주세요'
+        }
+        
+    }
+    res.json(
+        result
+    )
+    // res.json 
+    // 객체 자체를 보내주면 되므로 result자체를 보내준다.
+    //console.log(req.cookies);
+
 })
 
 app.get('/login',(req,res)=>{
