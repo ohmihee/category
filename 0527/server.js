@@ -6,6 +6,7 @@ const port = process.env.PORT||3009
 const cookieParser = require('cookie-parser')
 //const token = require('./createtoken') //외부 js파일 가져오기
 const ctoken = require('./jwt')
+const auth = require('./middleware/auth')
 
 
 app.set('view engine','html')
@@ -55,6 +56,12 @@ app.get('/',(req,res)=>{   //main페이지
 // res.send()나 res.render()는 결국 응답메시지를 완성시켜 보내줌
 */
 
+
+app.get('/user/info',auth,(req,res)=>{
+    // auth를 한 번 거쳐서 간다는 의미
+    // 순서대로 callback 함수를 두번 거친다는 의미
+    res.send(`hello ${req.userid}`)
+})
 
 
 app.get('/menu1',(req,res)=>{   //sub페이지
