@@ -10,7 +10,9 @@ console.log(typeof header)  //object
 let payload = {
     "sub": "1234567890",
     "name": "algml",
-    "iat": 123456789
+    "iat": 123456789,
+    "userid":123,
+    "user":"algml0703"
 }
 /*
 signature
@@ -85,3 +87,5 @@ let algml = {
 
 let algml2 = JSON.stringify(algml)
 //console.log(typeof algml2,'===========',algml2);  //string =========== {"name":"algml","age":26}
+
+let token = createtoken()
