@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 const app = express()
 const port = process.env.PORT||3009
 const cookieParser = require('cookie-parser')
-const token = require('./createtoken') //외부 js파일 가져오기
+//const token = require('./createtoken') //외부 js파일 가져오기
 const ctoken = require('./jwt')
 const auth = require('./middleware/auth')
 

@@ -1,8 +1,7 @@
-const mainRouter = require('./main/index.js')
 const express = require('express')
 const router = express.Router()
+const mainRouter = require('./main')
 
-
-router.use('/',mainRouter)
+router.use('/',mainRouter.main)
 
 module.exports = router
