@@ -5,8 +5,6 @@ require('dotenv').config({path: path.join(__dirname, '.env')})
 const crypto = require('crypto');
 
 
-
-
 // JWT 토큰 생성 header.payload.signature
 function createToken(userid){
     let header = {

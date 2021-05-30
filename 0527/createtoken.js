@@ -19,3 +19,4 @@ let signature = crypto.createHmac('sha256',Buffer.from('mihee')).update(`${encod
                                                                 .digest('base64')
                                                                 .replace('=','')
 console.log(`${encodeheader}.${encodepayload}.${signature}`)
+
