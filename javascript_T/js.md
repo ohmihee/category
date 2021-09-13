@@ -1,3 +1,6 @@
+* js 함수 참고 https://tutorialpost.apptilus.com/code/posts/js/js-array/
+* js 참고 https://helloworldjavascript.net/pages/100-javascript.html
+
 # 값(value)과 리터럴(literal)
         * 리터럴 -> 소스코드의 고정된 값을 의미
     ex) 1    -> 정수              (number)
